@@ -6,15 +6,15 @@
   
   <title>Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="#图书管理系统##- 设计需求:###通过链表实现图书管理系统的增删改查操作##- 代码实现: ###2021-01-07 20:48:42">
+  <meta name="description" content="#图书管理系统##- 设计需求:###通过链表实现图书管理系统的增删改查操作##- 代码实现:#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;#include &lt;string.h&gt; typedef struct book{  int    id;  char   name[20];  double  price;  char    a">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://example.com/2021/01/09/%E5%9B%BE%E4%B9%A6%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="#图书管理系统##- 设计需求:###通过链表实现图书管理系统的增删改查操作##- 代码实现: ###2021-01-07 20:48:42">
+<meta property="og:description" content="#图书管理系统##- 设计需求:###通过链表实现图书管理系统的增删改查操作##- 代码实现:#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;#include &lt;string.h&gt; typedef struct book{  int    id;  char   name[20];  double  price;  char    a">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-01-09T09:54:00.015Z">
-<meta property="article:modified_time" content="2021-01-09T09:54:35.226Z">
+<meta property="article:modified_time" content="2021-01-09T10:40:43.920Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -86,13 +86,81 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <hr>
-<p>#图书管理系统<br>##- 设计需求:<br>###通过链表实现图书管理系统的增删改查操作<br>##- 代码实现:</p>
+<p>#图书管理系统<br>##- 设计需求:<br>###通过链表实现图书管理系统的增删改查操作<br>##- 代码实现:<br>#include &lt;stdio.h&gt;<br>#include &lt;stdlib.h&gt;<br>#include &lt;string.h&gt;</p>
+<p>typedef struct book{<br>  int    id;<br>  char   name[20];<br>  double  price;<br>  char    author[20];<br>}BOOK;</p>
+<p>struct node<br>{<br>  BOOK book;<br>  struct node* next;<br>};</p>
+<p>void showMenu(struct node <em>head);<br>void addBook(struct node *head);<br>void queryBook(struct node *head);<br>void deleteBook(struct node *head);<br>void updateBook(struct node *head);<br>struct node</em> createBookNode(BOOK <em>book);<br>struct node</em> insertBookNode(struct node* head, BOOK <em>book);<br>struct node</em> createBookList();<br>void freeBookList(struct node* head);<br>struct node* queryBookListById(struct node* head, int id);<br>int deleteBookLstById(struct node* head, int id);<br>int getBookListLength(struct node* head);<br>void printBookLstInfo(struct node* head);<br>void saveBookListToFile(struct node* head);<br>void readBookListFromFile(struct node* head);<br>void error(const char* err);</p>
+<p>int main() {<br>  system (“color 8b”);<br>  struct node* list = createBookList();<br>  // 当文件books.txt已有图书信息时，先全部读取所有书本信息<br>  readBookListFromFile(list);<br>  showMenu(list);<br>  int choice;<br>  while (1) {<br>    printf(“\t\t\t\t*<strong><strong><strong><strong><strong><strong><strong><em>请选择你想要的操作</em></strong></strong></strong></strong></strong></strong></strong>\n”);<br>    scanf(“%d”,&amp;choice);<br>      switch (choice) {<br>      case 0:<br>        freeBookList(list);<br>        system(“cls”);<br>        printf(“\t\t\t\t*<strong><strong><strong><strong><strong><strong><strong><em>欢迎下次继续使用</em></strong></strong></strong></strong></strong></strong></strong>\n”);<br>        exit(0);<br>      case 1:<br>        addBook(list);<br>        break;<br>      case 2:<br>        queryBook(list);<br>        break;<br>      case 3:<br>        deleteBook(list);<br>        break;<br>      case 4:<br>        updateBook(list);<br>        break;<br>      default:<br>        printf(“\n\t\t\t   输入错误，请重新输入\n\n\t\t\t    “);<br>        system(“PAUSE”);<br>      }<br>  }<br>  return 0;<br>}</p>
+<p>struct node* createBookNode(BOOK <em>book)<br>{<br>  struct node</em> p = (struct node*)calloc(1,sizeof(struct node));<br>  BOOK *b;<br>  if(p != NULL)<br>  {<br>    if(book != NULL)<br>    {<br>      b = &amp;(p-&gt;book);<br>      b-&gt;id = book-&gt;id;<br>      strcpy(b-&gt;name, book-&gt;name);<br>      b-&gt;price = book-&gt;price;<br>      strcpy(b-&gt;author, book-&gt;author);<br>    }<br>    p-&gt;next = NULL;<br>  }<br>  return p;<br>}</p>
+<p>// 表尾增加图书结点<br>struct node* insertBookNode(struct node* head, BOOK <em>book)<br>{<br>  if(head != NULL)<br>  {<br>    struct node</em> node = createBookNode(book);<br>    BOOK <em>b = &amp;(node-&gt;book);<br>    if(node != NULL)<br>    {<br>      struct node</em> p = head;</p>
+<pre><code>  while(p-&gt;next != NULL)
+    p = p-&gt;next;
+
+  p-&gt;next = node;
+  return node;
+&#125;</code></pre>
+<p>  }<br>  return NULL;<br>}</p>
+<p>// 创建带头结点的图书空链表<br>struct node* createBookList()<br>{<br>  return createBookNode(NULL);<br>}</p>
+<p>// 释放图书链表内存空间<br>void freeBookList(struct node* head)<br>{<br>  struct node* p = head;<br>  while(p != NULL)<br>  {<br>    head = p-&gt;next;<br>    free(p);<br>    p = head;<br>  }<br>}</p>
+<p>// 根据图书ID查找图书结点<br>struct node* queryBookListById(struct node* head, int id)<br>{</p>
+<p>  struct node *p = NULL;<br>  if(head != NULL)<br>  {<br>    p = head-&gt;next;<br>    while(p != NULL)<br>    {<br>      if(p-&gt;book.id == id)<br>        break;<br>      p = p-&gt;next;<br>    }<br>  }<br>  return p;<br>}</p>
+<p>// 根据图书ID删除图书结点<br>int deleteBookListById(struct node* head, int id)<br>{<br>  struct node *p = NULL, *pre = NULL;<br>  int status = 0;<br>  if(head != NULL)<br>  {<br>    pre = head;<br>    p = head-&gt;next;<br>    while(p != NULL)<br>    {<br>      if(p-&gt;book.id == id)<br>      {<br>        pre-&gt;next = p-&gt;next;<br>        free(p);<br>        status = 1;<br>        break;<br>      }<br>      pre = p;<br>      p = p-&gt;next;<br>    }<br>  }<br>  return status;<br>}</p>
+<p>// 获取图书链表的长度<br>int getBookListLength(struct node* head)<br>{<br>  int n = 0;<br>  struct node *p = NULL;<br>  if(head != NULL)<br>  {<br>    p = head-&gt;next;<br>    while(p != NULL)<br>    {<br>      n++;<br>      p = p-&gt;next;<br>    }<br>  }<br>  return n;<br>}</p>
+<p>// 输出链表所有结点保存的图书信息<br>void printBookListInfo(struct node* head)<br>{<br>  struct node* p = head-&gt;next;<br>  printf(“图书编号                 书名     价格     作者\n”);<br>  BOOK *b;<br>  while(p != NULL)<br>  {<br>    b = &amp;(p-&gt;book);</p>
+<pre><code>printf(&quot;%8d %20s %8.2f %8s\n&quot;, b-&gt;id, b-&gt;name, b-&gt;price, b-&gt;author) ;
+p = p-&gt;next;</code></pre>
+<p>  }<br>}</p>
+<p>// 文件保存图书链表所有信息<br>void saveBookListToFile(struct node* head)<br>{<br>  if(head != NULL)<br>  {<br>    struct node <em>p = head-&gt;next;<br>    FILE</em> fp = fopen(“books.txt”, “w+”);<br>    if(fp != NULL)<br>    {<br>      while(p != NULL)<br>      {<br>        fprintf(fp, “%d %s %f %s\n”, (p-&gt;book).id,(p-&gt;book).name, (p-&gt;book).price, (p-&gt;book).author);<br>        p = p-&gt;next;<br>      }<br>      fclose(fp);</p>
+<pre><code>&#125;else &#123;
+
+  error(&quot;打开book.txt文件失败，请检查!\n&quot;);
+&#125;</code></pre>
+<p>  }<br>}</p>
+<p>// 从文件读取图书信息保存到链表<br>void readBookListFromFile(struct node* head)<br>{<br>  FILE* fp = fopen(“books.txt”, “r+”);<br>  BOOK book;<br>  if (fp != NULL) {<br>    while (fscanf(fp, “%d%s%lf%s%d”, &amp;book.id, book.name,&amp;book.price, book.author) != EOF) {</p>
+<pre><code>  insertBookNode(head, &amp;book);
+&#125;
+fclose(fp);</code></pre>
+<p>  }else {<br>    error(“打开book.txt文件失败，请检查!\n”);<br>  }<br>}</p>
+<p>// 显示出错信息，并退出程序<br>void error(const char* err)<br>{<br>  printf(err);<br>  exit(-1);<br> }</p>
+<p>void showMenu(struct node *head) {<br>  printf(“———-欢迎使用图书管理系统———-\n\n”);<br>  printf(“当前系统共用图书%d本！\n\n”, getBookListLength(head));<br>  printf(“系统提供以下功能：\n”);<br>  printf(“1:添加图书\n”);<br>  printf(“2:查看图书\n”);<br>  printf(“3:删除图书\n”);<br>  printf(“4:修改图书\n”);<br>  printf(“0:退出系统\n\n”);<br>}</p>
+<p>void addBook(struct node *head) {</p>
+<p>  printf(“请您按提示添加图书信息：\n”);<br>  printf(“依次输入编号 书名 价格 作者信息，以空格分隔:\n”);</p>
+<p>  BOOK book;</p>
+<p>   scanf(“%d%s%lf%s”, &amp;book.id, book.name,&amp;book.price,book.author);<br>    if (queryBookListById(head, book.id) != NULL)<br>      printf(“该编号对应的图书信息已经存在，无法增加!\n”);<br>    else {<br>      insertBookNode(head, &amp;book);<br>      saveBookListToFile(head);<br>      printf(“添加成功!\n”);<br>    }<br>}<br>void queryBook(struct node *head) {</p>
+<p>  printBookListInfo(head);<br>}</p>
+<p>void deleteBook(struct node *head) {<br>  printf(“请输入要删除的图书编号：”);<br>  char a[1024];<br>  int id;<br>  scanf(“%d”,&amp;id);</p>
+<pre><code>if (deleteBookListById(head, id))
+&#123;
+  printf(&quot;该编号%d对应的图书信息删除成功!\n&quot;, id);
+
+&#125;else
+&#123;
+  printf(&quot;该编号对应的图书信息不存在!\n&quot;);
+&#125;</code></pre>
+<p>}<br>void updateBook(struct node *head) {<br>  printf(“请输入要修改的图书编号：”);<br>  int id ;<br>    scanf(“%d”, &amp;id);<br>    struct node *p = queryBookListById(head, id);</p>
+<pre><code>if (p == NULL)
+  printf(&quot;该编号对应的图书信息不存在!\n&quot;);
+else &#123;
+  printf(&quot;该编号对应的图书信息如下，请按照提示修改：\n&quot;);
+  printf(&quot;图书编号                 书名     价格     作者\n&quot;);
+  BOOK *book = &amp;(p-&gt;book);
+  printf(&quot;%8d %20s %8.2f %8s\n&quot;,book-&gt;id, book-&gt;name, \
+      book-&gt;price, book-&gt;author);
+
+  printf(&quot;依次输入修改后的书名、价格、作者信息，以空格分隔:\n&quot;);
+      scanf(&quot;%s%lf%s&quot;,book-&gt;name, &amp;book-&gt;price, book-&gt;author);
+    saveBookListToFile(head);
+    printf(&quot;修改成功，修改后的图书信息如下：\n&quot;);
+    printf(&quot;图书编号                 书名     价格     作者\n&quot;);
+    printf(&quot;%8d %20s %8.2f %8s\n&quot;, book-&gt;id, book-&gt;name, book-&gt;price, book-&gt;author);
+ &#125;</code></pre>
+<p>}</p>
 <p>###2021-01-07 20:48:42</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/09/%E5%9B%BE%E4%B9%A6%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/" data-id="ckjpkr9z20000gous6prahdn4" data-title="" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/09/%E5%9B%BE%E4%B9%A6%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/" data-id="ckjpkvxb400003gus01lkgvqv" data-title="" class="article-share-link">Share</a>
       
       
       
